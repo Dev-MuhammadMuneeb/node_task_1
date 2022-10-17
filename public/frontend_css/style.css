@@ -16,7 +16,8 @@ body {
 }
 @font-face {
   font-family: "Bradford LL";
-  src: url("/fonts/BradfordLL-Regular.woff2") format("woff2"), url("/fonts/BradfordLL-Regular.woff") format("woff");
+  src: url("/fonts/BradfordLL-Regular.woff2") format("woff2"),
+    url("/fonts/BradfordLL-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -24,21 +25,24 @@ body {
 
 @font-face {
   font-family: "Bradford LL";
-  src: url("/fonts/BradfordLL-Italic.woff2") format("woff2"), url("/fonts/BradfordLL-Italic.woff") format("woff");
+  src: url("/fonts/BradfordLL-Italic.woff2") format("woff2"),
+    url("/fonts/BradfordLL-Italic.woff") format("woff");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
 }
 @font-face {
   font-family: "Necto Mono";
-  src: url("/fonts/Necto-Mono.woff2") format("woff2"), url("/fonts/Necto-Mono.woff") format("woff");
+  src: url("/fonts/Necto-Mono.woff2") format("woff2"),
+    url("/fonts/Necto-Mono.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "TT Nooks Script";
-  src: url("/fonts/TTNooksScript-Bold.woff2") format("woff2"), url("/fonts/TTNooksScript-Bold.woff") format("woff");
+  src: url("/fonts/TTNooksScript-Bold.woff2") format("woff2"),
+    url("/fonts/TTNooksScript-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -841,6 +845,7 @@ input::-ms-input-placeholder {
   font-weight: 700;
   width: max-content;
   width: -moz-max-content;
+  margin: -50px 0 0 70px;
   padding-bottom: 4px;
   border-bottom: 1px solid black;
 }
