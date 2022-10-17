@@ -1322,7 +1322,7 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
       if (val.answer) {
         $("#typeSelection .answerInner").append(`
           <div class="selectionOptions">
-            <button data-val="${val.answer}" data-id="${val.id}" class="selectionBtns selectionBtn" >${val.answer}</button>
+            <button data-val="${val.answer}" data-id="${val.id}" onClick="${checkAllergie}" class="selectionBtns selectionBtn" >${val.answer}</button>
           </div>
         `);
       }
@@ -1331,7 +1331,11 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     if (alreadyAnswered && alreadyAnswered.answer) {
       if (Array.isArray(alreadyAnswered.answer)) {
         alreadyAnswered.answer.forEach((answer) => {
-          if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
+          if (answer == "Non of the Above") {
+            $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
+              handleNoneOfTheAbove(),
+            ]);
+          } else if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
             $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
               true,
             ]);
@@ -1345,7 +1349,11 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     ) {
       if (Array.isArray(currenQuesAnswerObj.answer)) {
         currenQuesAnswerObj.answer.forEach((answer) => {
-          if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
+          if (answer == "Non of the Above") {
+            $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
+              handleNoneOfTheAbove(),
+            ]);
+          } else if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
             $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
               true,
             ]);
@@ -1384,6 +1392,10 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     $("#questionRow h1").html(ques.question);
   }
   currentQuestionCounter++;
+}
+
+async function checkAllergie() {
+  return true;
 }
 
 async function storeAnswer(currentQuestion, currentActiveAnswerType) {
