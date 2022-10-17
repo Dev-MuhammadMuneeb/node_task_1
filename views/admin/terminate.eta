@@ -1,0 +1,71 @@
+<% if(it.layout_clean_mode) {%>
+<% layout("../layouts/admin/Clean") %>
+<% } else {%>
+<% layout("../layouts/admin/Main") %>
+<%}%>
+
+
+
+<div>
+
+<section class="table-placeholder bg-white mb-5 p-3 pl-4 pr-4 pt-4" style='height:auto;'>
+  <div class="table-responsive">
+    <table class="table table-mh br w-100 table-bordered table-striped">
+      <thead class='thead-white text-nowrap'>
+
+        <% it.get_column().forEach(function(data, index) { %>
+        <% if (it.get_order_by().length < 1 || it.get_field_column()[index] == '' || it.get_field_column()[index] == undefined) { %>
+        <th scope="col" class="paragraphText text-left"><%= data %></th>
+        <% } else { %>
+        <th scope='col' class='paragraphText text-left'>
+          <a class="text-dark" href="<%= `${it.get_sort_base_url()}?order_by=${it.get_field_column()[index]}&direction=${it.get_sort() == 'DESC' ? 'ASC' : 'DESC'}` %>"><%= data %>
+            <span class="order-arrows">
+              <i style="margin-top: 0.45rem;float:right;font-size: small; color: #aaa;<%~ it.get_field_column()[index] == it.get_order_by() && it.get_sort() == 'DESC' ? 'color:black !important;' : ''%>" class="fas fa-long-arrow-alt-down"></i>
+              <i style="margin-top: 0.45rem;float:right;font-size: small; color: #aaa;<%~ it.get_field_column()[index] == it.get_order_by() && it.get_sort() == 'ASC' ? 'color:black !important;' : ''%>" class="fas fa-long-arrow-alt-up"></i>
+            </span>
+          </a>
+        </th>
+        <% } %>
+        <% }) %>
+      </thead>
+      <tbody class="tbody-light">
+        <% it.get_list().forEach(function(data) { %>
+        <tr>
+
+          <td>
+            <%= data.id %>
+          </td>
+
+
+
+          <td>
+            <div class='mkd-image-container'>
+              <img class='img-fluid modal-image' src='<%= data.image %>' onerror="if (this.src != '/uploads/placeholder.jpg') this.src = '/uploads/placeholder.jpg'" />
+            </div>
+          </td>
+
+
+
+          <td>
+            <%= data.credential.email %>
+          </td>
+
+
+          <td><span class="font-weight-bold">First name</span>: <%= data.first_name %> </br><span class="font-weight-bold">Last name</span>: <%= data.last_name %> </br></td>
+
+
+          <td>
+            <%= it.ucFirst(it.status_mapping()[data.status]) %>
+          </td>
+
+
+          <td><a class="btn btn-link  link-underline text-underline  btn-sm" target="_self" href="/admin/users-view/<%= data.id %>">View</a>&nbsp;<a target="_self" class="btn btn-link  link-underline text-underline  btn-sm" href="/admin/users-edit/<%= data.id %>">Edit</a>&nbsp;</td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <p class="pagination_custom"><%~ it.get_links() %></p>
+  </div>
+</section>
+
+</div>

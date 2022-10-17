@@ -552,6 +552,12 @@ input::-ms-input-placeholder {
   width: 50%;
 }
 
+.termination .answerInner {
+  backgroud: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  width: 50%;
+}
+
 .mcqOptions {
   display: inline-block;
   /* margin: 10px 10px; */

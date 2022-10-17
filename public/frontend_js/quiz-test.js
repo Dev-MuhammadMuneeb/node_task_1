@@ -64,6 +64,7 @@ let nextQuestionTimeoutCounter = 3000;
 let selectionQuestionTimeoutCounter = 6000;
 let closeResponseTimeoutCounter = 5000;
 let timeout;
+let terminateTimeout;
 
 const mainImage = $(".main-image-container img");
 fetch(url_preset + "/configurations")
@@ -1322,7 +1323,11 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
       if (val.answer) {
         $("#typeSelection .answerInner").append(`
           <div class="selectionOptions">
-            <button data-val="${val.answer}" data-id="${val.id}" onClick="${checkAllergie}" class="selectionBtns selectionBtn" >${val.answer}</button>
+            <button data-val="${val.answer}" data-id="${
+          val.id
+        }" onClick="${checkAllergie(
+          val.answer
+        )}" class="selectionBtns selectionBtn" >${val.answer}</button>
           </div>
         `);
       }
@@ -1392,10 +1397,6 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     $("#questionRow h1").html(ques.question);
   }
   currentQuestionCounter++;
-}
-
-async function checkAllergie() {
-  return true;
 }
 
 async function storeAnswer(currentQuestion, currentActiveAnswerType) {
@@ -2009,4 +2010,37 @@ function handleNoneOfTheAbove() {
 
 function handleImageMissing(self) {
   $(self).addClass("image-missing");
+}
+
+function checkAllergie(vName) {
+  if (!["Banana", "Olive", "Sunflowers"].includes(vName)) {
+    terminateQuiz();
+  }
+}
+
+function terminateQuiz() {
+  $("#termination .answerInner").html();
+  $("#termination").css("display", "block");
+
+  $("#termination.answerInner").html(
+    `<div> <p>You have an allergy to one of the main ingredients in our system. Our current system will not suit you.</p> <h3>Quiz will now be terminated</h3> <p class="timer">${terminationScreen}</p> </div>`
+  );
+}
+
+function terminationScreen() {
+  timer();
+  window.location.href = "http://localhost:3001/";
+  // setTimeout(function () {
+  //   window.location.href = "http://localhost:3001/";
+  // }, terminateTimeout);
+}
+
+function timer() {
+  terminateTimeout--;
+  if (count <= 0) {
+    clearInterval(terminateTimeout);
+    return;
+  }
+  document.getElementById("timer").innerHTML =
+    "Quiz is now being Terminated, 65, ETA: " + count.toString() + " secs";
 }

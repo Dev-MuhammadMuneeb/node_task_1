@@ -16,6 +16,7 @@
     <li><a href="/admin/output-variables/0" class="menu-item <%= it._base_url === '/admin/output-variables' ? 'menu-active':''%>">Output variables</a></li>
     <li><a href="/admin/profile-sections/0" class="menu-item <%= it._base_url === '/admin/profile-sections' ? 'menu-active':''%>">Profile sections</a></li>
     <li><a href="/admin/profile" class="menu-item <%= it._base_url === '/admin/profile' ? 'menu-active':''%>">Profile</a></li>
+    <li><a href="/admin/profile" class="menu-item <%= it._base_url === '/admin/terminateConfiguration' ? 'menu-active':''%>">Termination Timer</a></li>
     <li><a href="/admin/logout" class="menu-item <%= it._base_url === '/admin/logout' ? 'menu-active':''%>">Logout</a></li>
   </ul>
 

@@ -11,7 +11,10 @@ app.get("/api/v1/output-variable/:name", async function (req, res, next) {
 
     const outputVariable = await db.output_variable.getByFields({ name });
     if (!outputVariable) {
-      return res.status(404).json({ success: false, message: `Output variable of that name ${name} is not found.` });
+      return res.status(404).json({
+        success: false,
+        message: `Output variable of that name ${name} is not found.`,
+      });
     }
     let payload = {},
       actives = [];
@@ -24,64 +27,79 @@ app.get("/api/v1/output-variable/:name", async function (req, res, next) {
         }
       }
     }
-    payload = { name: outputVariable.name, actives: actives, ranges_response: JSON.parse(outputVariable.ranges_response) };
+    payload = {
+      name: outputVariable.name,
+      actives: actives,
+      ranges_response: JSON.parse(outputVariable.ranges_response),
+    };
 
     return res.status(201).json({ success: true, data: payload });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
 });
 
-app.get("/api/v1/output-variables/actives-list", async function (req, res, next) {
-  try {
-    //body should have actives lsit as array
-    const { names_list } = req.query;
-    if (!names_list) {
-      return res.status(401).json({ success: false, message: "Empty list" });
-    }
-    const outputVariablesList = names_list.split(",");
-
-    const outputVars = await db.output_variable.findAll({
-      where: {
-        name: outputVariablesList,
-      },
-    });
-
-    let allActivesList = [];
-    outputVars.forEach((outputVar) => {
-      if (outputVar.active_list) {
-        let parsedList = JSON.parse(outputVar.active_list);
-        if (parsedList.length) {
-          parsedList.forEach((item) => {
-            if (!allActivesList.includes(item)) {
-              allActivesList.push(item);
-            }
-          });
-        }
+app.get(
+  "/api/v1/output-variables/actives-list",
+  async function (req, res, next) {
+    try {
+      //body should have actives lsit as array
+      const { names_list } = req.query;
+      if (!names_list) {
+        return res.status(401).json({ success: false, message: "Empty list" });
       }
-    });
+      const outputVariablesList = names_list.split(",");
 
-    let actives = await db.active
-      .findAll({
+      const outputVars = await db.output_variable.findAll({
         where: {
-          id: allActivesList,
+          name: outputVariablesList,
         },
-      })
-      .then((data) => {
-        return data.map((item) => {
-          return item.name;
-        });
       });
-    if (!actives) {
-      return res.status(404).json({ success: false, message: "No actives found for this list" });
+
+      let allActivesList = [];
+      outputVars.forEach((outputVar) => {
+        if (outputVar.active_list) {
+          let parsedList = JSON.parse(outputVar.active_list);
+          if (parsedList.length) {
+            parsedList.forEach((item) => {
+              if (!allActivesList.includes(item)) {
+                allActivesList.push(item);
+              }
+            });
+          }
+        }
+      });
+
+      let actives = await db.active
+        .findAll({
+          where: {
+            id: allActivesList,
+          },
+        })
+        .then((data) => {
+          return data.map((item) => {
+            return item.name;
+          });
+        });
+      if (!actives) {
+        return res
+          .status(404)
+          .json({ success: false, message: "No actives found for this list" });
+      }
+      return res.status(201).json({ success: true, data: actives });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Something went wrong",
+      });
     }
-    return res.status(201).json({ success: true, data: actives });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
   }
-});
+);
 
 app.get("/api/v1/places/autocomplete", async function (req, res, next) {
   try {
@@ -90,7 +108,9 @@ app.get("/api/v1/places/autocomplete", async function (req, res, next) {
     var config = {
       method: "get",
       // url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=(regions)&key=${process.env.GOOGLE_PLACES_API_KEY}`,
-      url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${process.env.GOOGLE_PLACES_API_KEY}`,
+      url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
+        input
+      )}&key=${process.env.GOOGLE_PLACES_API_KEY}`,
       headers: {},
     };
 
@@ -107,7 +127,10 @@ app.get("/api/v1/places/autocomplete", async function (req, res, next) {
     return res.status(201).json(payload);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
 });
 app.get("/api/v1/rules", async function (req, res, next) {
@@ -116,13 +139,18 @@ app.get("/api/v1/rules", async function (req, res, next) {
     const rules = await db.rule.getAll();
 
     if (!rules) {
-      return res.status(404).json({ success: false, message: `There are no rules` });
+      return res
+        .status(404)
+        .json({ success: false, message: `There are no rules` });
     }
 
     return res.status(201).json({ success: true, data: rules });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
 });
 
@@ -132,7 +160,9 @@ app.get("/api/v1/profile-sections", async function (req, res, next) {
     const profileSections = await db.result_profile.getAll();
 
     if (!profileSections) {
-      return res.status(404).json({ success: false, message: `There are sections to display` });
+      return res
+        .status(404)
+        .json({ success: false, message: `There are sections to display` });
     }
 
     for (const section of profileSections) {
@@ -150,7 +180,24 @@ app.get("/api/v1/profile-sections", async function (req, res, next) {
     return res.status(201).json({ success: true, data: profileSections });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+});
+
+app.get("/api/v1/terminate_configuration", async function (req, res, next) {
+  try {
+    terminate_configuration.findAll().then((res) => {
+      res.status(201).json({ success: true, data: res });
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
 });
 
@@ -167,11 +214,15 @@ app.get("/api/v1/weather-profile", async function (req, res, next) {
     // .then((response) => response.data);
     if (place_details?.data?.status !== "OK") {
       console.error(place_details);
-      return res.status(400).json({ success: false, message: "Can't get location" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Can't get location" });
     }
     const lon = place_details.data.result.geometry.location.lng;
     const lat = place_details.data.result.geometry.location.lat;
-    const country = place_details.data.result.address_components.find((adr) => adr.types.includes("country"));
+    const country = place_details.data.result.address_components.find((adr) =>
+      adr.types.includes("country")
+    );
     // const country;
     config = {
       method: "get",
@@ -187,9 +238,15 @@ app.get("/api/v1/weather-profile", async function (req, res, next) {
     const pollutionData = await axios(config).then((response) => response.data);
 
     // let temperatureWeight = weather.main.temp;
-    let { sunValue, sunWeight, temperatureWeight } = calculateSun(weather.main.temp);
-    let { humidityValue, humidityWeight } = calculateHumidity(weather.main.humidity);
-    let { pollutionValue, pollutionWeight } = calculatePollution(pollutionData.list[0].main.aqi);
+    let { sunValue, sunWeight, temperatureWeight } = calculateSun(
+      weather.main.temp
+    );
+    let { humidityValue, humidityWeight } = calculateHumidity(
+      weather.main.humidity
+    );
+    let { pollutionValue, pollutionWeight } = calculatePollution(
+      pollutionData.list[0].main.aqi
+    );
     let temperature = weather.main.temp;
     let unit = "°C";
     if (country.short_name == "GB" || country.short_name == "US") {
@@ -227,7 +284,10 @@ app.get("/api/v1/weather-profile", async function (req, res, next) {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: error.message || "Something went wrong" });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
 });
 
@@ -317,4 +377,5 @@ function calculatePollution(airQuality) {
     };
   }
 }
+
 module.exports = app;
